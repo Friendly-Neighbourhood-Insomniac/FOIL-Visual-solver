@@ -51,15 +51,20 @@
             transform: rotate(35deg);
             transition: 0.5s;
         }
-        
-         /* Ensure visibility of the problem display */
-        #problemDisplay {
-            visibility: visible;
-        }
 
         .glow-button:hover:after {
             left: -100%;
             top: -100%;
+        }
+
+        /* Ensure visibility of the problem display */
+        #problemDisplay {
+            visibility: visible;
+        }
+
+        /* Additional style tweaks to ensure clarity */
+        .futuristic-card {
+            color: white;
         }
     </style>
 </head>
@@ -79,7 +84,7 @@
     </div>
 
     <script>
-        
+        let currentProblem = null;
 
         function generateRandomInteger(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -89,8 +94,25 @@
             const b = generateRandomInteger(-10, 10);
             const d = generateRandomInteger(-10, 10);
             currentProblem = { b, d };
+
+            // Correctly format the LaTeX problem string
             const problemLatex = `(x ${b >= 0 ? '+' : ''}${b < 0 ? `(${b})` : b})(x ${d >= 0 ? '+' : ''}${d < 0 ? `(${d})` : d})`;
-            katex.render(problemLatex, document.getElementById('problemDisplay'), { displayMode: true });
+
+            // Render the problem using KaTeX
+            const problemDisplay = document.getElementById('problemDisplay');
+            
+            if (problemDisplay) {
+                try {
+                    // Use katex.render to display the problem in LaTeX format
+                    katex.render(problemLatex, problemDisplay, { displayMode: true });
+                } catch (error) {
+                    console.error("KaTeX rendering error:", error);
+                }
+            } else {
+                console.error('Problem display container not found');
+            }
+
+            // Clear the solution area
             document.getElementById('solutionDisplay').innerHTML = '';
         }
 
